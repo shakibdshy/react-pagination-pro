@@ -100,6 +100,7 @@ function CustomPagination() {
 | nextIcon | React.ReactNode | - | Custom next button icon |
 | isLoop | boolean | false | Enable pagination loop - when reaching last page, next goes to first page and vice versa |
 | siblingCount | number | 1 | Number of siblings to show on each side of the current page |
+| boundaries | number | 1 | Number of pages to show at the beginning and end of the pagination |
 | dots | React.ReactNode | - | Custom dots/ellipsis element to show between page numbers |
 | onChange | (state: PaginationState) => void | - | Callback when pagination state changes |
 | mode | 'client' \| 'server' | 'client' | Pagination mode |
@@ -151,6 +152,29 @@ const [state, actions] = usePagination(options);
 | lastPage | () => void | Go to last page |
 
 ## Examples
+
+### Basic Usage with Boundaries
+
+```tsx
+import { Pagination } from 'react-pagination-pro';
+
+function MyComponent() {
+  return (
+    <Pagination
+      totalItems={100}
+      defaultPageSize={10}
+      // Show 2 pages at the start and end
+      // Example: 1 2 ... 4 5 [6] 7 8 ... 9 10
+      boundaries={2}
+      // Show 2 siblings on each side of current page
+      siblingCount={2}
+      onChange={({ currentPage, pageSize }) => {
+        // Handle page change
+      }}
+    />
+  );
+}
+```
 
 ### Client-side Pagination
 

@@ -28,6 +28,7 @@ export function Pagination({
   isLoop = false,
   initialPage = 1,
   siblingCount = 1,
+  boundaries = 1,
   dots = "...",
   ...props
 }: PaginationProps) {
@@ -69,63 +70,39 @@ export function Pagination({
   };
 
   const getPaginationRange = () => {
-    const totalPageNumbers = siblingCount * 2 + 5;
+    const totalPageNumbers = boundaries * 2 + siblingCount * 2 + 5;
 
-    /**
-     * If the total number of pages is less than or equal to the desired number of page buttons to display,
-     * we can show all pages without any ellipsis/dots.
-     * 
-     * For example, if we want to show 7 page buttons (siblingCount=1), and we only have 5 total pages,
-     * we'll return [1,2,3,4,5] instead of adding any dots/ellipsis.
-     * 
-     * @returns {number[]} Array of consecutive page numbers from 1 to totalPages
-     */
     if (totalPageNumbers >= totalPages) {
       return range(1, totalPages);
     }
 
-    const leftSiblingIndex = Math.max(currentPage - siblingCount, 1);
-    const rightSiblingIndex = Math.min(currentPage + siblingCount, totalPages);
+    const leftSiblingIndex = Math.max(currentPage - siblingCount, boundaries + 1);
+    const rightSiblingIndex = Math.min(currentPage + siblingCount, totalPages - boundaries);
 
-    const shouldShowLeftDots = leftSiblingIndex > 2;
-    const shouldShowRightDots = rightSiblingIndex < totalPages - 2;
+    const shouldShowLeftDots = leftSiblingIndex > (boundaries + 2);
+    const shouldShowRightDots = rightSiblingIndex < (totalPages - boundaries - 1);
 
-    /**
-     * Case 1: Show dots on the right side only
-     * Used when current page is near the start of pagination
-     * Example: [1, 2, 3, 4, 5, ..., 10]
-     * - Shows first {3 + 2 * siblingCount} pages
-     * - Followed by dots and last page
-     */
+    const leftBoundary = range(1, boundaries);
+    const rightBoundary = range(totalPages - boundaries + 1, totalPages);
+
+    if (!shouldShowLeftDots && !shouldShowRightDots) {
+      const middleRange = range(leftSiblingIndex, rightSiblingIndex);
+      return [...leftBoundary, ...middleRange, ...rightBoundary];
+    }
+
     if (!shouldShowLeftDots && shouldShowRightDots) {
-      const leftItemCount = 3 + 2 * siblingCount;
-      const leftRange = range(1, leftItemCount);
-      return [...leftRange, 'dots', totalPages];
+      const leftRange = range(1, rightSiblingIndex);
+      return [...leftRange, 'dots', ...rightBoundary];
     }
 
-    /**
-     * Case 2: Show dots on the left side only
-     * Used when current page is near the end of pagination
-     * Example: [1, ..., 8, 9, 10]
-     * - Shows last {3 + 2 * siblingCount} pages
-     * - Followed by dots and first page
-     */
     if (shouldShowLeftDots && !shouldShowRightDots) {
-      const rightItemCount = 3 + 2 * siblingCount;
-      const rightRange = range(totalPages - rightItemCount + 1, totalPages);
-      return [1, 'dots', ...rightRange];
+      const rightRange = range(leftSiblingIndex, totalPages);
+      return [...leftBoundary, 'dots', ...rightRange];
     }
 
-    /**
-     * Case 3: Show both left and right dots
-     * Used when current page is in the middle of pagination
-     * Example: [1, ..., 4, 5, 6, ..., 10]
-     * - Shows pages around the current page
-     * - Followed by dots on both sides
-     */
     if (shouldShowLeftDots && shouldShowRightDots) {
       const middleRange = range(leftSiblingIndex, rightSiblingIndex);
-      return [1, 'dots', ...middleRange, 'dots', totalPages];
+      return [...leftBoundary, 'dots', ...middleRange, 'dots', ...rightBoundary];
     }
 
     return range(1, totalPages);
@@ -166,7 +143,6 @@ export function Pagination({
 
         {paginationRange.map((pageNumber, index) => {
           if (pageNumber === 'dots') {
-            // Determine if this is the left or right dots
             const isLeftDots = index === 1;
             return (
               <Button

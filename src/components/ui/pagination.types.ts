@@ -44,6 +44,8 @@ export interface PaginationProps extends UsePaginationProps {
   initialPage?: number;
   /** Number of siblings to show on each side of the current page */
   siblingCount?: number;
+  /** Number of pages to show at the beginning and end of the pagination */
+  boundaries?: number;
   /** Custom dots/ellipsis element to show between page numbers */
   dots?: React.ReactNode;
 }
