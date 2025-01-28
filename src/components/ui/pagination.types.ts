@@ -42,6 +42,8 @@ export interface PaginationProps extends UsePaginationProps {
   isLoop?: boolean;
   /** Initial page number (1-based indexing) */
   initialPage?: number;
+  /** Number of siblings to show on each side of the current page */
+  siblingCount?: number;
 }
 
 export type PaginationButtonVariants = VariantProps<typeof paginationButton>; 

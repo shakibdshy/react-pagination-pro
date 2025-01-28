@@ -10,6 +10,8 @@ import {
 import type { PaginationProps } from "./pagination.types";
 import { Button } from "@shakibdshy/react-button-pro";
 
+const DOTS = "...";
+
 export function Pagination({
   className,
   buttonClassName,
@@ -27,14 +29,13 @@ export function Pagination({
   nextIcon = "→",
   isLoop = false,
   initialPage = 1,
+  siblingCount = 1,
   ...props
 }: PaginationProps) {
   const [
     { currentPage, totalPages, pageSize },
     { setCurrentPage, setPageSize, previousPage, nextPage },
   ] = usePagination({ ...props, defaultCurrentPage: initialPage });
-
-  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   const handlePreviousPage = () => {
     if (isLoop && currentPage === 1) {
@@ -51,6 +52,76 @@ export function Pagination({
       nextPage();
     }
   };
+
+  const range = (start: number, end: number) => {
+    const length = end - start + 1;
+    return Array.from({ length }, (_, idx) => idx + start);
+  };
+
+  const getPaginationRange = () => {
+    const totalPageNumbers = siblingCount * 2 + 5;
+
+    /**
+     * If the total number of pages is less than or equal to the desired number of page buttons to display,
+     * we can show all pages without any ellipsis/dots.
+     * 
+     * For example, if we want to show 7 page buttons (siblingCount=1), and we only have 5 total pages,
+     * we'll return [1,2,3,4,5] instead of adding any dots/ellipsis.
+     * 
+     * @returns {number[]} Array of consecutive page numbers from 1 to totalPages
+     */
+    if (totalPageNumbers >= totalPages) {
+      return range(1, totalPages);
+    }
+
+    const leftSiblingIndex = Math.max(currentPage - siblingCount, 1);
+    const rightSiblingIndex = Math.min(currentPage + siblingCount, totalPages);
+
+    const shouldShowLeftDots = leftSiblingIndex > 2;
+    const shouldShowRightDots = rightSiblingIndex < totalPages - 2;
+
+    /**
+     * Case 1: Show dots on the right side only
+     * Used when current page is near the start of pagination
+     * Example: [1, 2, 3, 4, 5, ..., 10]
+     * - Shows first {3 + 2 * siblingCount} pages
+     * - Followed by dots and last page
+     */
+    if (!shouldShowLeftDots && shouldShowRightDots) {
+      const leftItemCount = 3 + 2 * siblingCount;
+      const leftRange = range(1, leftItemCount);
+      return [...leftRange, DOTS, totalPages];
+    }
+
+    /**
+     * Case 2: Show dots on the left side only
+     * Used when current page is near the end of pagination
+     * Example: [1, ..., 8, 9, 10]
+     * - Shows last {3 + 2 * siblingCount} pages
+     * - Followed by dots and first page
+     */
+    if (shouldShowLeftDots && !shouldShowRightDots) {
+      const rightItemCount = 3 + 2 * siblingCount;
+      const rightRange = range(totalPages - rightItemCount + 1, totalPages);
+      return [1, DOTS, ...rightRange];
+    }
+
+    /**
+     * Case 3: Show both left and right dots
+     * Used when current page is in the middle of pagination
+     * Example: [1, ..., 4, 5, 6, ..., 10]
+     * - Shows pages around the current page
+     * - Followed by dots on both sides
+     */
+    if (shouldShowLeftDots && shouldShowRightDots) {
+      const middleRange = range(leftSiblingIndex, rightSiblingIndex);
+      return [1, DOTS, ...middleRange, DOTS, totalPages];
+    }
+
+    return range(1, totalPages);
+  };
+
+  const paginationRange = getPaginationRange();
 
   return (
     <div className={cn(paginationRoot(), className)}>
@@ -83,21 +154,35 @@ export function Pagination({
           {previousIcon}
         </Button>
 
-        {pages.map((page) => (
-          <Button
-            key={page}
-            onClick={() => setCurrentPage(page)}
-            disabled={page === currentPage}
-            variant={page === currentPage ? activeVariant : variant}
-            color={page === currentPage ? activeColor : color}
-            size={size}
-            rounded={rounded}
-            className={cn(buttonClassName)}
-            as="button"
-          >
-            {page}
-          </Button>
-        ))}
+        {paginationRange.map((pageNumber, index) => {
+          if (pageNumber === DOTS) {
+            return (
+              <span
+                key={`dots-${index}`}
+                className="px-2 py-1"
+                aria-hidden="true"
+              >
+                {DOTS}
+              </span>
+            );
+          }
+
+          return (
+            <Button
+              key={pageNumber}
+              onClick={() => setCurrentPage(pageNumber as number)}
+              disabled={pageNumber === currentPage}
+              variant={pageNumber === currentPage ? activeVariant : variant}
+              color={pageNumber === currentPage ? activeColor : color}
+              size={size}
+              rounded={rounded}
+              className={cn(buttonClassName)}
+              as="button"
+            >
+              {pageNumber}
+            </Button>
+          );
+        })}
 
         <Button
           onClick={handleNextPage}
