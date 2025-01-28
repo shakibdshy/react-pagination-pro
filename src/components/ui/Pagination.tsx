@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { usePagination } from "@/hooks/usePagination";
 import { cn } from "@/lib/utils";
@@ -15,6 +15,16 @@ export function Pagination({
   buttonClassName,
   showPageSize = false,
   pageSizeOptions = [10, 20, 30, 40, 50],
+  size = "md",
+  activeVariant = "primary",
+  variant = "outline",
+  activeColor = "primary",
+  color = "primary",
+  navigationButtonVariant = "outline",
+  navigationButtonColor = "primary",
+  rounded = "md",
+  previousIcon = "←",
+  nextIcon = "→",
   ...props
 }: PaginationProps) {
   const [
@@ -46,8 +56,13 @@ export function Pagination({
           disabled={currentPage === 1}
           className={cn(buttonClassName)}
           aria-label="Previous page"
+          size={size}
+          variant={navigationButtonVariant}
+          color={navigationButtonColor}
+          rounded={rounded}
+          as="button"
         >
-          ←
+          {previousIcon}
         </Button>
 
         {pages.map((page) => (
@@ -55,9 +70,12 @@ export function Pagination({
             key={page}
             onClick={() => setCurrentPage(page)}
             disabled={page === currentPage}
-            variant={page === currentPage ? "primary" : "outline"}
-            color={page === currentPage ? "secondary" : "primary"}
+            variant={page === currentPage ? activeVariant : variant}
+            color={page === currentPage ? activeColor : color}
+            size={size}
+            rounded={rounded}
             className={cn(buttonClassName)}
+            as="button"
           >
             {page}
           </Button>
@@ -68,8 +86,13 @@ export function Pagination({
           disabled={currentPage === totalPages}
           className={cn(buttonClassName)}
           aria-label="Next page"
+          size={size}
+          variant={navigationButtonVariant}
+          color={navigationButtonColor}
+          rounded={rounded}
+          as="button"
         >
-          →
+          {nextIcon}
         </Button>
       </nav>
     </div>
