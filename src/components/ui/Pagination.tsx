@@ -25,14 +25,32 @@ export function Pagination({
   rounded = "md",
   previousIcon = "←",
   nextIcon = "→",
+  isLoop = false,
+  initialPage = 1,
   ...props
 }: PaginationProps) {
   const [
     { currentPage, totalPages, pageSize },
     { setCurrentPage, setPageSize, previousPage, nextPage },
-  ] = usePagination(props);
+  ] = usePagination({ ...props, defaultCurrentPage: initialPage });
 
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+
+  const handlePreviousPage = () => {
+    if (isLoop && currentPage === 1) {
+      setCurrentPage(totalPages);
+    } else {
+      previousPage();
+    }
+  };
+
+  const handleNextPage = () => {
+    if (isLoop && currentPage === totalPages) {
+      setCurrentPage(1);
+    } else {
+      nextPage();
+    }
+  };
 
   return (
     <div className={cn(paginationRoot(), className)}>
@@ -52,8 +70,8 @@ export function Pagination({
 
       <nav className={paginationNav()}>
         <Button
-          onClick={previousPage}
-          disabled={currentPage === 1}
+          onClick={handlePreviousPage}
+          disabled={!isLoop && currentPage === 1}
           className={cn(buttonClassName)}
           aria-label="Previous page"
           size={size}
@@ -82,8 +100,8 @@ export function Pagination({
         ))}
 
         <Button
-          onClick={nextPage}
-          disabled={currentPage === totalPages}
+          onClick={handleNextPage}
+          disabled={!isLoop && currentPage === totalPages}
           className={cn(buttonClassName)}
           aria-label="Next page"
           size={size}

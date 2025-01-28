@@ -38,6 +38,10 @@ export interface PaginationProps extends UsePaginationProps {
   previousIcon?: React.ReactNode;
   /** Next button Icon */
   nextIcon?: React.ReactNode;
+  /** Enable pagination loop - when reaching last page, next goes to first page and vice versa */
+  isLoop?: boolean;
+  /** Initial page number (1-based indexing) */
+  initialPage?: number;
 }
 
 export type PaginationButtonVariants = VariantProps<typeof paginationButton>; 

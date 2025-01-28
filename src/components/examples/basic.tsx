@@ -32,6 +32,8 @@ export function BasicExample() {
       <Pagination
         totalItems={ITEMS.length}
         defaultPageSize={10}
+        isLoop={true}
+        initialPage={3}
         showPageSize={true}
         onChange={({ currentPage, pageSize }) => {
           const start = (currentPage - 1) * pageSize;
