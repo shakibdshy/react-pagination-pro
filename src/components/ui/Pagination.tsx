@@ -10,8 +10,6 @@ import {
 import type { PaginationProps } from "./pagination.types";
 import { Button } from "@shakibdshy/react-button-pro";
 
-const DOTS = "...";
-
 export function Pagination({
   className,
   buttonClassName,
@@ -30,6 +28,7 @@ export function Pagination({
   isLoop = false,
   initialPage = 1,
   siblingCount = 1,
+  dots = "...",
   ...props
 }: PaginationProps) {
   const [
@@ -50,6 +49,17 @@ export function Pagination({
       setCurrentPage(1);
     } else {
       nextPage();
+    }
+  };
+
+  const handleDotsClick = (direction: 'left' | 'right') => {
+    const jumpSize = siblingCount * 2 + 1;
+    if (direction === 'left') {
+      const targetPage = Math.max(currentPage - jumpSize, 1);
+      setCurrentPage(targetPage);
+    } else {
+      const targetPage = Math.min(currentPage + jumpSize, totalPages);
+      setCurrentPage(targetPage);
     }
   };
 
@@ -90,7 +100,7 @@ export function Pagination({
     if (!shouldShowLeftDots && shouldShowRightDots) {
       const leftItemCount = 3 + 2 * siblingCount;
       const leftRange = range(1, leftItemCount);
-      return [...leftRange, DOTS, totalPages];
+      return [...leftRange, 'dots', totalPages];
     }
 
     /**
@@ -103,7 +113,7 @@ export function Pagination({
     if (shouldShowLeftDots && !shouldShowRightDots) {
       const rightItemCount = 3 + 2 * siblingCount;
       const rightRange = range(totalPages - rightItemCount + 1, totalPages);
-      return [1, DOTS, ...rightRange];
+      return [1, 'dots', ...rightRange];
     }
 
     /**
@@ -115,7 +125,7 @@ export function Pagination({
      */
     if (shouldShowLeftDots && shouldShowRightDots) {
       const middleRange = range(leftSiblingIndex, rightSiblingIndex);
-      return [1, DOTS, ...middleRange, DOTS, totalPages];
+      return [1, 'dots', ...middleRange, 'dots', totalPages];
     }
 
     return range(1, totalPages);
@@ -155,15 +165,23 @@ export function Pagination({
         </Button>
 
         {paginationRange.map((pageNumber, index) => {
-          if (pageNumber === DOTS) {
+          if (pageNumber === 'dots') {
+            // Determine if this is the left or right dots
+            const isLeftDots = index === 1;
             return (
-              <span
+              <Button
                 key={`dots-${index}`}
-                className="px-2 py-1"
-                aria-hidden="true"
+                onClick={() => handleDotsClick(isLeftDots ? 'left' : 'right')}
+                className={cn(buttonClassName)}
+                variant="ghost"
+                color={color}
+                size={size}
+                rounded={rounded}
+                as="button"
+                aria-label={isLeftDots ? "Previous pages" : "Next pages"}
               >
-                {DOTS}
-              </span>
+                {dots}
+              </Button>
             );
           }
 

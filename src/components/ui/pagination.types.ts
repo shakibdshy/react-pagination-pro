@@ -44,6 +44,8 @@ export interface PaginationProps extends UsePaginationProps {
   initialPage?: number;
   /** Number of siblings to show on each side of the current page */
   siblingCount?: number;
+  /** Custom dots/ellipsis element to show between page numbers */
+  dots?: React.ReactNode;
 }
 
 export type PaginationButtonVariants = VariantProps<typeof paginationButton>; 
