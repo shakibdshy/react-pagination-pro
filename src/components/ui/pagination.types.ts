@@ -1,4 +1,6 @@
+import type { VariantProps } from '@/lib/utils';
 import type { UsePaginationProps } from '@/types/pagination';
+import { paginationButton } from './pagination.styles';
 
 export interface PaginationProps extends UsePaginationProps {
   /** Additional class name for the root element */
@@ -11,4 +13,6 @@ export interface PaginationProps extends UsePaginationProps {
   showPageSize?: boolean;
   /** Available options for page size selector */
   pageSizeOptions?: number[];
-} 
+}
+
+export type PaginationButtonVariants = VariantProps<typeof paginationButton>; 

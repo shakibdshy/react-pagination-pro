@@ -1,12 +1,14 @@
-import { tv } from 'tailwind-variants';
+import { cva } from '@/lib/utils';
 
-export const paginationStyles = {
-  root: tv({
-    base: 'flex flex-wrap items-center gap-2',
-  }),
+export const paginationRoot = cva('flex flex-wrap items-center gap-2');
 
-  button: tv({
-    base: 'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-950 disabled:pointer-events-none disabled:opacity-50',
+export const paginationButton = cva(
+  [
+    'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors',
+    'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-950',
+    'disabled:pointer-events-none disabled:opacity-50',
+  ],
+  {
     variants: {
       variant: {
         default: 'bg-neutral-900 text-neutral-50 shadow hover:bg-neutral-900/90',
@@ -24,13 +26,11 @@ export const paginationStyles = {
       variant: 'default',
       size: 'default',
     },
-  }),
+  }
+);
 
-  nav: tv({
-    base: 'flex items-center gap-1',
-  }),
+export const paginationNav = cva('flex items-center gap-1');
 
-  select: tv({
-    base: 'h-9 rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm shadow-sm outline-none hover:bg-neutral-100',
-  }),
-}; 
+export const paginationSelect = cva(
+  'h-9 rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm shadow-sm outline-none hover:bg-neutral-100'
+); 
