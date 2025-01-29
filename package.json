@@ -9,15 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@shakibdshy/react-button-pro": "^1.0.5",
-    "@shakibdshy/tailwind-theme": "^1.0.0",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
+    "@shakibdshy/react-button-pro": "^1.0.6",
+    "@shakibdshy/tailwind-theme": "^1.0.6",
     "next": "15.1.5",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "tailwind-merge": "^2.6.0",
-    "tailwind-variants": "^0.3.1"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
