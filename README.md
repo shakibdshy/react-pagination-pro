@@ -10,18 +10,17 @@ A powerful and flexible pagination library for React applications with both cont
 - 📱 Fully responsive
 - 🎯 TypeScript support
 - 🎨 Built with Tailwind CSS
-- 🔌 Powered by [@shakibdshy/react-button-pro](https://github.com/shakibdshy/react-button-pro)
 - 🎭 Flexible styling with [class-variance-authority](https://www.npmjs.com/package/class-variance-authority)
 - 🔧 Controlled & Uncontrolled components
 
 ## Installation
 
 ```bash
-npm install react-pagination-pro
+npm install @shakibdshy/react-pagination-pro
 # or
-yarn add react-pagination-pro
+yarn add @shakibdshy/react-pagination-pro
 # or
-pnpm add react-pagination-pro
+pnpm add @shakibdshy/react-pagination-pro
 ```
 
 ## Quick Start
@@ -29,7 +28,7 @@ pnpm add react-pagination-pro
 ### Basic Usage
 
 ```tsx
-import { Pagination } from 'react-pagination-pro';
+import { Pagination } from '@shakibdshy/react-pagination-pro';
 
 function MyComponent() {
   return (
@@ -47,7 +46,7 @@ function MyComponent() {
 ### Using the Hook (Custom UI)
 
 ```tsx
-import { usePagination } from 'react-pagination-pro';
+import { usePagination } from '@shakibdshy/react-pagination-pro';
 
 function CustomPagination() {
   const [
@@ -106,6 +105,9 @@ function CustomPagination() {
 | mode | 'client' \| 'server' | 'client' | Pagination mode |
 | onPageChange | (page: number, pageSize: number) => Promise<void> | - | Server-side data fetching function |
 | isLoading | boolean | false | Loading state |
+| isDisabled | boolean | false | Disable all pagination actions |
+| isDisabledPrevious | boolean | false | Disable only the previous page button |
+| isDisabledNext | boolean | false | Disable only the next page button |
 
 ### usePagination Hook
 
@@ -151,12 +153,49 @@ const [state, actions] = usePagination(options);
 | firstPage | () => void | Go to first page |
 | lastPage | () => void | Go to last page |
 
+## Accessibility
+
+The pagination component is built with accessibility in mind:
+
+- Full keyboard navigation support
+- ARIA labels and roles for screen readers
+- Proper tab indexing for interactive elements
+- Disabled states properly communicated to assistive technologies
+- Semantic HTML structure with navigation landmarks
+
 ## Examples
+
+### Disabled States
+
+```tsx
+import { Pagination } from '@shakibdshy/react-pagination-pro';
+
+function DisabledExample() {
+  return (
+    <>
+      {/* Fully disabled pagination */}
+      <Pagination
+        totalItems={100}
+        defaultPageSize={10}
+        isDisabled={true}
+      />
+
+      {/* Disable specific navigation buttons */}
+      <Pagination
+        totalItems={100}
+        defaultPageSize={10}
+        isDisabledPrevious={true} // Disable previous button
+        isDisabledNext={true}     // Disable next button
+      />
+    </>
+  );
+}
+```
 
 ### Basic Usage with Boundaries
 
 ```tsx
-import { Pagination } from 'react-pagination-pro';
+import { Pagination } from '@shakibdshy/react-pagination-pro';
 
 function MyComponent() {
   return (
@@ -179,7 +218,7 @@ function MyComponent() {
 ### Client-side Pagination
 
 ```tsx
-import { Pagination } from 'react-pagination-pro';
+import { Pagination } from '@shakibdshy/react-pagination-pro';
 
 function ClientSidePagination() {
   const [items, setItems] = useState(allItems);
@@ -207,7 +246,7 @@ function ClientSidePagination() {
 ### Server-side Pagination
 
 ```tsx
-import { Pagination } from 'react-pagination-pro';
+import { Pagination } from '@shakibdshy/react-pagination-pro';
 
 function ServerSidePagination() {
   const [items, setItems] = useState([]);
