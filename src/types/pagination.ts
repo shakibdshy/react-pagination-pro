@@ -12,7 +12,6 @@ export interface PaginationInfo extends PaginationState {
   isLastPage: boolean;
   startIndex: number;
   endIndex: number;
-  /** Whether data is currently being fetched */
   isLoading?: boolean;
 }
 

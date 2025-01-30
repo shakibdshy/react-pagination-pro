@@ -1,9 +1,9 @@
 "use client";
 
-import { Button } from "@shakibdshy/react-button-pro";
 import { usePagination } from "@/hooks/usePagination";
 import { cn } from "@/lib/utils";
 import {
+  button,
   paginationNav,
   paginationRoot,
   paginationSelect,
@@ -30,6 +30,9 @@ export function Pagination({
   siblingCount = 1,
   boundaries = 1,
   dots = "...",
+  isDisabled = false,
+  isDisabledPrevious = false,
+  isDisabledNext = false,
   ...props
 }: PaginationProps) {
   const [
@@ -129,6 +132,7 @@ export function Pagination({
           value={pageSize}
           onChange={(e) => setPageSize(Number(e.target.value))}
           className={paginationSelect()}
+          disabled={isDisabled}
         >
           {pageSizeOptions.map((size) => (
             <option key={size} value={size}>
@@ -139,70 +143,161 @@ export function Pagination({
       )}
 
       <nav className={paginationNav()}>
-        <Button
-          onClick={handlePreviousPage}
-          disabled={!isLoop && currentPage === 1}
-          className={cn(buttonClassName)}
-          aria-label="Previous page"
-          size={size}
-          variant={navigationButtonVariant}
-          color={navigationButtonColor}
-          rounded={rounded}
-          as="button"
-        >
-          {previousIcon}
-        </Button>
+        <ul className="flex items-center gap-1">
+          <li
+            onClick={
+              isDisabled || isDisabledPrevious || (!isLoop && currentPage === 1)
+                ? undefined
+                : handlePreviousPage
+            }
+            className={cn(
+              button({
+                variant: navigationButtonVariant,
+                color: navigationButtonColor,
+                size,
+                rounded,
+              }),
+              buttonClassName,
+              (isDisabled || isDisabledPrevious || (!isLoop && currentPage === 1))
+                ? "pointer-events-none opacity-100"
+                : "cursor-pointer"
+            )}
+            aria-label="Previous page"
+            role="button"
+            tabIndex={
+              isDisabled || isDisabledPrevious || (!isLoop && currentPage === 1)
+                ? -1
+                : 0
+            }
+            aria-disabled={
+              isDisabled || isDisabledPrevious || (!isLoop && currentPage === 1)
+            }
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                if (!(isDisabled || isDisabledPrevious || (!isLoop && currentPage === 1))) {
+                  handlePreviousPage();
+                }
+              }
+            }}
+          >
+            {previousIcon}
+          </li>
 
-        {paginationRange.map((pageNumber, index) => {
-          if (pageNumber === "dots") {
-            const isLeftDots = index === 1;
+          {paginationRange.map((pageNumber, index) => {
+            if (pageNumber === "dots") {
+              const isLeftDots = index === 1;
+              return (
+                <li
+                  key={`dots-${index}`}
+                  onClick={isDisabled ? undefined : () => handleDotsClick(isLeftDots ? "left" : "right")}
+                  className={cn(
+                    button({
+                      variant,
+                      color,
+                      size,
+                      rounded,
+                    }),
+                    buttonClassName,
+                    isDisabled ? "pointer-events-none opacity-100" : "cursor-pointer"
+                  )}
+                  aria-label={isLeftDots ? "Previous pages" : "Next pages"}
+                  role="button"
+                  tabIndex={isDisabled ? -1 : 0}
+                  aria-disabled={isDisabled}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      if (!isDisabled) {
+                        handleDotsClick(isLeftDots ? "left" : "right");
+                      }
+                    }
+                  }}
+                >
+                  {dots}
+                </li>
+              );
+            }
+
+            const isCurrentPage = pageNumber === currentPage;
             return (
-              <Button
-                key={`dots-${index}`}
-                onClick={() => handleDotsClick(isLeftDots ? "left" : "right")}
-                className={cn(buttonClassName)}
-                variant="ghost"
-                color={color}
-                size={size}
-                rounded={rounded}
-                as="button"
-                aria-label={isLeftDots ? "Previous pages" : "Next pages"}
+              <li
+                key={pageNumber}
+                onClick={
+                  isDisabled || isCurrentPage
+                    ? undefined
+                    : () => setCurrentPage(pageNumber as number)
+                }
+                className={cn(
+                  button({
+                    variant: isCurrentPage ? activeVariant : variant,
+                    color: isCurrentPage ? activeColor : color,
+                    size,
+                    rounded,
+                  }),
+                  buttonClassName,
+                  (isDisabled || isCurrentPage)
+                    ? "pointer-events-none opacity-100"
+                    : "cursor-pointer"
+                )}
+                role="button"
+                tabIndex={isDisabled || isCurrentPage ? -1 : 0}
+                aria-current={isCurrentPage ? "page" : undefined}
+                aria-disabled={isDisabled || isCurrentPage}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    if (!(isDisabled || isCurrentPage)) {
+                      setCurrentPage(pageNumber as number);
+                    }
+                  }
+                }}
               >
-                {dots}
-              </Button>
+                {pageNumber}
+              </li>
             );
-          }
+          })}
 
-          return (
-            <Button
-              key={pageNumber}
-              onClick={() => setCurrentPage(pageNumber as number)}
-              disabled={pageNumber === currentPage}
-              variant={pageNumber === currentPage ? activeVariant : variant}
-              color={pageNumber === currentPage ? activeColor : color}
-              size={size}
-              rounded={rounded}
-              className={cn(buttonClassName)}
-              as="button"
-            >
-              {pageNumber}
-            </Button>
-          );
-        })}
-
-        <Button
-          onClick={handleNextPage}
-          disabled={!isLoop && currentPage === totalPages}
-          className={cn(buttonClassName)}
-          aria-label="Next page"
-          size={size}
-          variant={navigationButtonVariant}
-          color={navigationButtonColor}
-          rounded={rounded}
-          as="button"
-        >
-          {nextIcon}
-        </Button>
+          <li
+            onClick={
+              isDisabled || isDisabledNext || (!isLoop && currentPage === totalPages)
+                ? undefined
+                : handleNextPage
+            }
+            className={cn(
+              button({
+                variant: navigationButtonVariant,
+                color: navigationButtonColor,
+                size,
+                rounded,
+              }),
+              buttonClassName,
+              (isDisabled || isDisabledNext || (!isLoop && currentPage === totalPages))
+                ? "pointer-events-none opacity-100"
+                : "cursor-pointer"
+            )}
+            aria-label="Next page"
+            role="button"
+            tabIndex={
+              isDisabled || isDisabledNext || (!isLoop && currentPage === totalPages)
+                ? -1
+                : 0
+            }
+            aria-disabled={
+              isDisabled || isDisabledNext || (!isLoop && currentPage === totalPages)
+            }
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                if (!(isDisabled || isDisabledNext || (!isLoop && currentPage === totalPages))) {
+                  handleNextPage();
+                }
+              }
+            }}
+          >
+            {nextIcon}
+          </li>
+        </ul>
       </nav>
     </div>
   );
