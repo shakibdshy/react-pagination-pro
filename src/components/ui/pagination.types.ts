@@ -23,12 +23,6 @@ export interface PaginationProps extends UsePaginationProps {
   className?: string;
   /** Additional class name for pagination buttons */
   buttonClassName?: string;
-  /** Additional class name for the active page button */
-  activeButtonClassName?: string;
-  /** Whether to show the page size selector */
-  showPageSize?: boolean;
-  /** Available options for page size selector */
-  pageSizeOptions?: number[];
   /** Size of the pagination buttons */
   size?: ButtonSize;
   /** Variant for the active page button */
@@ -49,12 +43,6 @@ export interface PaginationProps extends UsePaginationProps {
   previousIcon?: React.ReactNode;
   /** Next button Icon */
   nextIcon?: React.ReactNode;
-  /** Disable previous button */
-  isDisabledPrevious?: boolean;
-  /** Disable next button */
-  isDisabledNext?: boolean;
-  /** Disable all buttons */
-  isDisabled?: boolean;
   /** Enable pagination loop - when reaching last page, next goes to first page and vice versa */
   isLoop?: boolean;
   /** Initial page number (1-based indexing) */
