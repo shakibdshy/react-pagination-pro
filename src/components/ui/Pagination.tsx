@@ -6,15 +6,49 @@ import {
   button,
   paginationNav,
   paginationRoot,
-  paginationSelect,
 } from "@shakibdshy/tailwind-theme";
 import type { PaginationProps } from "./pagination.types";
 
+/**
+ * A fully accessible and customizable pagination component.
+ * 
+ * @component
+ * @example
+ * ```tsx
+ * <Pagination
+ *   totalItems={100}
+ *   defaultPageSize={10}
+ *   onChange={({ currentPage, pageSize }) => {
+ *     // Handle pagination changes
+ *   }}
+ * />
+ * ```
+ * 
+ * @param props - Component props
+ * @param props.className - Additional class name for the root element
+ * @param props.buttonClassName - Additional class name for pagination buttons
+ * @param props.size - Size of the pagination buttons (default: "md")
+ * @param props.activeVariant - Variant for the active page button (default: "primary")
+ * @param props.variant - Variant for inactive page buttons (default: "outline")
+ * @param props.activeColor - Color for the active page button (default: "primary")
+ * @param props.color - Color for inactive page buttons (default: "primary")
+ * @param props.navigationButtonVariant - Variant for navigation buttons (default: "outline")
+ * @param props.navigationButtonColor - Color for navigation buttons (default: "primary")
+ * @param props.rounded - Rounded size for all buttons (default: "md")
+ * @param props.previousIcon - Previous button icon (default: "←")
+ * @param props.nextIcon - Next button icon (default: "→")
+ * @param props.isLoop - Enable pagination loop (default: false)
+ * @param props.initialPage - Initial page number (default: 1)
+ * @param props.siblingCount - Number of siblings to show on each side (default: 1)
+ * @param props.boundaries - Number of pages to show at boundaries (default: 1)
+ * @param props.dots - Custom dots/ellipsis element (default: "...")
+ * @param props.isDisabled - Disable all buttons (default: false)
+ * @param props.isDisabledPrevious - Disable previous button (default: false)
+ * @param props.isDisabledNext - Disable next button (default: false)
+ */
 export function Pagination({
   className,
   buttonClassName,
-  showPageSize = false,
-  pageSizeOptions = [10, 20, 30, 40, 50],
   size = "md",
   activeVariant = "primary",
   variant = "outline",
@@ -36,9 +70,15 @@ export function Pagination({
   ...props
 }: PaginationProps) {
   const [
-    { currentPage, totalPages, pageSize },
-    { setCurrentPage, setPageSize, previousPage, nextPage },
-  ] = usePagination({ ...props, defaultCurrentPage: initialPage });
+    { currentPage, totalPages },
+    { setCurrentPage, previousPage, nextPage },
+  ] = usePagination({
+    ...props,
+    defaultCurrentPage: initialPage,
+    isDisabled,
+    isDisabledPrevious,
+    isDisabledNext,
+  });
 
   const handlePreviousPage = () => {
     if (isLoop && currentPage === 1) {
@@ -126,24 +166,9 @@ export function Pagination({
   const paginationRange = getPaginationRange();
 
   return (
-    <div className={cn(paginationRoot(), className)}>
-      {showPageSize && (
-        <select
-          value={pageSize}
-          onChange={(e) => setPageSize(Number(e.target.value))}
-          className={paginationSelect()}
-          disabled={isDisabled}
-        >
-          {pageSizeOptions.map((size) => (
-            <option key={size} value={size}>
-              {size} per page
-            </option>
-          ))}
-        </select>
-      )}
-
+    <div className={cn(paginationRoot(), className)} role="navigation" aria-label="Pagination">
       <nav className={paginationNav()}>
-        <ul className="flex items-center gap-1">
+        <ul className="flex items-center gap-1" role="list">
           <li
             onClick={
               isDisabled || isDisabledPrevious || (!isLoop && currentPage === 1)
@@ -244,6 +269,7 @@ export function Pagination({
                 tabIndex={isDisabled || isCurrentPage ? -1 : 0}
                 aria-current={isCurrentPage ? "page" : undefined}
                 aria-disabled={isDisabled || isCurrentPage}
+                aria-label={`Page ${pageNumber}`}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
