@@ -1,11 +1,22 @@
-import type { VariantProps } from '@/lib/utils';
-import type { UsePaginationProps } from '@/types/pagination';
-import { paginationButton } from './pagination.styles';
+import type { UsePaginationProps } from "@/types/pagination";
 
-export type ButtonSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-export type ButtonColor = 'primary' | 'secondary' | 'neutral' | 'info' | 'error' | 'warning' | 'success';
-export type ButtonVariant = 'primary' | 'outline' | 'flat' | 'light' | 'ghost' | 'text';
-export type ButtonRounded = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full' | 'none';
+export type ButtonSize = "sm" | "md" | "lg" | "xl" | "2xl";
+export type ButtonColor =
+  | "primary"
+  | "secondary"
+  | "neutral"
+  | "info"
+  | "error"
+  | "warning"
+  | "success";
+export type ButtonVariant =
+  | "primary"
+  | "outline"
+  | "flat"
+  | "light"
+  | "ghost"
+  | "text";
+export type ButtonRounded = "sm" | "md" | "lg" | "xl" | "2xl" | "full" | "none";
 
 export interface PaginationProps extends UsePaginationProps {
   /** Additional class name for the root element */
@@ -49,5 +60,3 @@ export interface PaginationProps extends UsePaginationProps {
   /** Custom dots/ellipsis element to show between page numbers */
   dots?: React.ReactNode;
 }
-
-export type PaginationButtonVariants = VariantProps<typeof paginationButton>; 

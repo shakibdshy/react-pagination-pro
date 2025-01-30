@@ -1,14 +1,14 @@
 "use client";
 
+import { Button } from "@shakibdshy/react-button-pro";
 import { usePagination } from "@/hooks/usePagination";
 import { cn } from "@/lib/utils";
 import {
   paginationNav,
   paginationRoot,
   paginationSelect,
-} from "./pagination.styles";
+} from "@shakibdshy/tailwind-theme";
 import type { PaginationProps } from "./pagination.types";
-import { Button } from "@shakibdshy/react-button-pro";
 
 export function Pagination({
   className,
@@ -53,9 +53,9 @@ export function Pagination({
     }
   };
 
-  const handleDotsClick = (direction: 'left' | 'right') => {
+  const handleDotsClick = (direction: "left" | "right") => {
     const jumpSize = siblingCount * 2 + 1;
-    if (direction === 'left') {
+    if (direction === "left") {
       const targetPage = Math.max(currentPage - jumpSize, 1);
       setCurrentPage(targetPage);
     } else {
@@ -76,11 +76,17 @@ export function Pagination({
       return range(1, totalPages);
     }
 
-    const leftSiblingIndex = Math.max(currentPage - siblingCount, boundaries + 1);
-    const rightSiblingIndex = Math.min(currentPage + siblingCount, totalPages - boundaries);
+    const leftSiblingIndex = Math.max(
+      currentPage - siblingCount,
+      boundaries + 1
+    );
+    const rightSiblingIndex = Math.min(
+      currentPage + siblingCount,
+      totalPages - boundaries
+    );
 
-    const shouldShowLeftDots = leftSiblingIndex > (boundaries + 2);
-    const shouldShowRightDots = rightSiblingIndex < (totalPages - boundaries - 1);
+    const shouldShowLeftDots = leftSiblingIndex > boundaries + 2;
+    const shouldShowRightDots = rightSiblingIndex < totalPages - boundaries - 1;
 
     const leftBoundary = range(1, boundaries);
     const rightBoundary = range(totalPages - boundaries + 1, totalPages);
@@ -92,17 +98,23 @@ export function Pagination({
 
     if (!shouldShowLeftDots && shouldShowRightDots) {
       const leftRange = range(1, rightSiblingIndex);
-      return [...leftRange, 'dots', ...rightBoundary];
+      return [...leftRange, "dots", ...rightBoundary];
     }
 
     if (shouldShowLeftDots && !shouldShowRightDots) {
       const rightRange = range(leftSiblingIndex, totalPages);
-      return [...leftBoundary, 'dots', ...rightRange];
+      return [...leftBoundary, "dots", ...rightRange];
     }
 
     if (shouldShowLeftDots && shouldShowRightDots) {
       const middleRange = range(leftSiblingIndex, rightSiblingIndex);
-      return [...leftBoundary, 'dots', ...middleRange, 'dots', ...rightBoundary];
+      return [
+        ...leftBoundary,
+        "dots",
+        ...middleRange,
+        "dots",
+        ...rightBoundary,
+      ];
     }
 
     return range(1, totalPages);
@@ -142,12 +154,12 @@ export function Pagination({
         </Button>
 
         {paginationRange.map((pageNumber, index) => {
-          if (pageNumber === 'dots') {
+          if (pageNumber === "dots") {
             const isLeftDots = index === 1;
             return (
               <Button
                 key={`dots-${index}`}
-                onClick={() => handleDotsClick(isLeftDots ? 'left' : 'right')}
+                onClick={() => handleDotsClick(isLeftDots ? "left" : "right")}
                 className={cn(buttonClassName)}
                 variant="ghost"
                 color={color}
