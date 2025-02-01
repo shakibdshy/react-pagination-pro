@@ -2,6 +2,10 @@
 
 A powerful and flexible pagination library for React applications with both controlled and uncontrolled components, supporting client-side and server-side pagination.
 
+[![npm version](https://img.shields.io/npm/v/@shakibdshy/react-pagination-pro.svg)](https://www.npmjs.com/package/@shakibdshy/react-pagination-pro)
+[![npm downloads](https://img.shields.io/npm/dm/@shakibdshy/react-pagination-pro.svg)](https://www.npmjs.com/package/@shakibdshy/react-pagination-pro)
+[![License](https://img.shields.io/npm/l/@shakibdshy/react-pagination-pro.svg)](https://github.com/shakibdshy/react-pagination-pro/blob/main/LICENSE)
+
 ## Features
 
 - 🚀 Modern React Hooks API
