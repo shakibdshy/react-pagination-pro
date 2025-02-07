@@ -139,10 +139,10 @@ export function usePagination({
   }, [safeSetCurrentPage, totalPages, isDisabled, isDisabledNext]);
 
   useEffect(() => {
-    if ((mode === 'server' || totalItems === 0) && !isDisabled) {
+    if (mode !== 'server' && totalItems === 0 && !isDisabled) {
       safeSetCurrentPage(1);
     }
-  }, [totalItems, mode, safeSetCurrentPage, isDisabled]);
+  }, [mode, totalItems, safeSetCurrentPage, isDisabled]);
 
   const paginationInfo = useMemo((): PaginationInfo => {
     const startIndex = (currentPage - 1) * pageSize;
